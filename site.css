@@ -96,10 +96,9 @@ ul { list-style: none; }
   justify-content: space-between;
   align-items: flex-start;
   gap: 24px;
-  pointer-events: none;
-  background: transparent;
+  /* Solid paper background so content scrolling underneath doesn't bleed through. */
+  background: var(--paper);
 }
-.top-bar > * { pointer-events: auto; }
 
 .brand {
   display: inline-flex;
@@ -107,8 +106,8 @@ ul { list-style: none; }
   line-height: 0;
 }
 .brand__mark {
-  /* Per brand CI — mark is 6:1; height 32px keeps the bar balanced */
-  height: 32px;
+  /* Per brand CI — mark is 6:1; height 48px keeps the bar balanced */
+  height: 48px;
   width: auto;
   flex: none;
   object-fit: contain;
@@ -116,8 +115,53 @@ ul { list-style: none; }
 }
 /* On the Home page only, show the full lockup (mark + wordmark) instead */
 .brand--lockup .brand__mark {
-  height: 72px;
+  height: 96px;
 }
+
+/* Hamburger toggle button — hidden on desktop, shown on mobile */
+.nav__toggle {
+  display: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+}
+.nav__toggle__icon {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 14px;
+}
+.nav__toggle__icon::before,
+.nav__toggle__icon::after,
+.nav__toggle__icon span {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 240ms var(--ease), opacity 200ms var(--ease), top 240ms var(--ease), bottom 240ms var(--ease);
+}
+.nav__toggle__icon::before { top: 0; }
+.nav__toggle__icon span    { top: 50%; transform: translateY(-50%); display: block; }
+.nav__toggle__icon::after  { bottom: 0; }
+/* X state when nav is open */
+.top-bar[data-nav-open="true"] .nav__toggle__icon::before {
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+.top-bar[data-nav-open="true"] .nav__toggle__icon::after {
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%) rotate(-45deg);
+}
+.top-bar[data-nav-open="true"] .nav__toggle__icon span { opacity: 0; }
 
 .top-nav {
   display: flex;
@@ -151,7 +195,8 @@ main.page {
   max-width: 1600px;
   margin: 0 auto;
   width: 100%;
-  padding: clamp(96px, 13vh, 140px) var(--gutter) clamp(64px, 8vh, 96px);
+  /* Increased top padding to clear the now-opaque fixed top-bar */
+  padding: clamp(120px, 16vh, 180px) var(--gutter) clamp(64px, 8vh, 96px);
 }
 .section__head {
   margin-bottom: clamp(40px, 6vw, 72px);
@@ -599,7 +644,7 @@ main.page {
 .foot__brand { display: inline-flex; align-items: center; }
 .foot__mark {
   display: block;
-  height: 18px;
+  height: 28px;
   width: auto;
 }
 .foot__col {
@@ -625,6 +670,17 @@ main.page {
   letter-spacing: 0;
   font-size: 10.5px;
 }
+.foot__copy {
+  font-family: var(--f-widescreen);
+  font-size: 9.5px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper);
+  opacity: 0.7;
+  text-align: center;
+  white-space: nowrap;
+}
 @media (max-width: 720px) {
   .foot__inner {
     flex-direction: column;
@@ -632,29 +688,57 @@ main.page {
     gap: 14px;
   }
   .foot__col { font-size: 9px; align-items: flex-start !important; }
+  .foot__copy {
+    font-size: 9px;
+    white-space: normal;
+    text-align: left;
+    letter-spacing: 0.12em;
+  }
 }
 
 /* =========================================================
    Responsive
    ========================================================= */
 @media (max-width: 720px) {
-  /* Tighter top bar + horizontal nav on mobile so it doesn't eat
-     180+px of vertical space hiding section headers underneath. */
+  /* Hamburger replaces the inline nav on mobile */
   .top-bar {
-    padding: 16px var(--gutter);
+    padding: 14px var(--gutter);
     align-items: center;
   }
+  .nav__toggle { display: inline-flex; }
   .top-nav {
-    flex-direction: row;
-    gap: clamp(14px, 3vw, 22px);
-    align-items: center;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--paper);
+    padding: 96px var(--gutter) 48px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    transform: translateY(-100%);
+    transition: transform 360ms var(--ease);
+    z-index: 40;
+    pointer-events: none;
   }
-  .top-nav a { font-size: 11px; letter-spacing: 0.06em; padding: 4px 0; }
-  .brand__mark { height: 24px; }
-  .brand--lockup .brand__mark { height: 36px; }
-  /* Reduce the top hero padding on Home so the lockup doesn't get
-     pushed way down a short mobile viewport. */
+  .top-bar[data-nav-open="true"] .top-nav {
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .top-nav a {
+    font-family: var(--f-widescreen);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition: color 200ms var(--ease);
+  }
+  .top-nav a.is-active,
+  .top-nav a:hover { color: var(--ink); }
+  .brand__mark { height: 38px; }
+  .brand--lockup .brand__mark { height: 64px; }
   .intro { padding-top: clamp(96px, 18vh, 160px); }
+  /* Body scroll lock while the menu is open */
+  body.has-nav-open { overflow: hidden; }
 }
 @media (max-width: 900px) {
   .case { grid-template-columns: 1fr 1fr; }
