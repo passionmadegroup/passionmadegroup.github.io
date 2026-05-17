@@ -152,7 +152,7 @@ main.page {
 .section__label {
   font-family: var(--f-widescreen);
   font-size: 18px;
-  font-weight: 300;
+  font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink);
@@ -243,26 +243,26 @@ main.page {
   grid-column: 2 / 3;
   aspect-ratio: 16 / 10;
 }
-/* Section group label — sits between groups of cases */
+/* Section group label — underlined heading between groups of cases */
 .cases__group-label {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 24px;
   margin: clamp(80px, 12vw, 160px) 0 clamp(28px, 3vw, 44px);
-  padding-top: clamp(28px, 3vw, 44px);
-  border-top: 1px solid var(--ink);
 }
 .cases__group-label:first-child,
 .section__head + .cases__group-label { margin-top: 0; }
 .cases__group-label .label {
   font-family: var(--f-widescreen);
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink);
   line-height: 1;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ink);
 }
 .cases__group-label .note {
   font-family: var(--f-thai);
@@ -610,5 +610,11 @@ main.page {
   .about-grid__label,
   .contact-grid__label { position: static; }
   .contact-cols { grid-template-columns: 1fr; }
+  /* Mobile: separate the address from the form with a hairline + breathing space */
+  .contact-cols .contact-form {
+    border-top: 1px solid var(--hairline);
+    padding-top: clamp(28px, 6vw, 40px);
+    margin-top: clamp(4px, 2vw, 12px);
+  }
   .foot { flex-direction: column; align-items: flex-start; gap: 16px; }
 }
