@@ -1,0 +1,803 @@
+/* =========================================================
+   PASSIONMADE GROUP — Shared stylesheet
+   Used by all pages under /site/
+   ========================================================= */
+
+/* Fonts — local TTFs from design system */
+@font-face {
+  font-family: "Zalando Sans";
+  src: url("fonts/ZalandoSans-Light.ttf") format("truetype");
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Zalando Sans";
+  src: url("fonts/ZalandoSans-Medium.ttf") format("truetype");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Zalando Sans";
+  src: url("fonts/ZalandoSans-Bold.ttf") format("truetype");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Prompt";
+  src: url("fonts/Prompt-Light.ttf") format("truetype");
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Prompt";
+  src: url("fonts/Prompt-Medium.ttf") format("truetype");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+
+:root {
+  --green: #013F32;
+  --paper: #FAF8F4;
+  --ink: #1A1A1A;
+  --ink-2: #555555;
+  --ink-3: #909090;
+  --hairline: rgba(26, 26, 26, 0.10);
+
+  --f-widescreen: "Zalando Sans Expanded", "Zalando Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --f-display: var(--f-widescreen);
+  --f-body: var(--f-widescreen);
+  --f-thai: "Prompt", "Zalando Sans", sans-serif;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --gutter: clamp(28px, 5vw, 80px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; background: none; border: 0; color: inherit; }
+ul { list-style: none; }
+
+/* Page fade-in */
+.page {
+  opacity: 0;
+  animation: pageIn 600ms var(--ease) forwards;
+}
+@keyframes pageIn { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .page { opacity: 1; animation: none; }
+}
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  padding: clamp(24px, 3.6vw, 44px) var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  /* Solid paper background so content scrolling underneath doesn't bleed through. */
+  background: var(--paper);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+.brand__mark {
+  /* Per brand CI — mark is 6:1; height 48px keeps the bar balanced */
+  height: 48px;
+  width: auto;
+  flex: none;
+  object-fit: contain;
+  display: block;
+}
+/* On the Home page only, show the full lockup (mark + wordmark) instead */
+.brand--lockup .brand__mark {
+  height: 96px;
+}
+
+/* Hamburger toggle button — hidden on desktop, shown on mobile */
+.nav__toggle {
+  display: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------------------------------------------------------
+   Inner pages (everything except Home) get a horizontal
+   top nav on desktop, with the hamburger toggle hidden.
+   Mobile still uses the hamburger via the @media rule below.
+   --------------------------------------------------------- */
+@media (min-width: 721px) {
+  body.has-hamburger .nav__toggle { display: none; }
+  body.has-hamburger .top-bar { align-items: center; }
+  body.has-hamburger .top-nav {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(20px, 3vw, 40px);
+    padding: 0;
+    background: transparent;
+    transform: none;
+    pointer-events: auto;
+  }
+  body.has-hamburger .top-nav a {
+    font-family: var(--f-widescreen);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition: color 200ms var(--ease);
+    padding: 4px 0;
+  }
+  body.has-hamburger .top-nav a.is-active,
+  body.has-hamburger .top-nav a:hover { color: var(--ink); }
+}
+/* Mobile (≤720): the @media rule far below turns the inline nav into
+   the slide-down overlay panel for every page, including Home. */
+.nav__toggle__icon {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 14px;
+}
+.nav__toggle__icon::before,
+.nav__toggle__icon::after,
+.nav__toggle__icon span {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 240ms var(--ease), opacity 200ms var(--ease), top 240ms var(--ease), bottom 240ms var(--ease);
+}
+.nav__toggle__icon::before { top: 0; }
+.nav__toggle__icon span    { top: 50%; transform: translateY(-50%); display: block; }
+.nav__toggle__icon::after  { bottom: 0; }
+/* X state when nav is open */
+.top-bar[data-nav-open="true"] .nav__toggle__icon::before {
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+.top-bar[data-nav-open="true"] .nav__toggle__icon::after {
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%) rotate(-45deg);
+}
+.top-bar[data-nav-open="true"] .nav__toggle__icon span { opacity: 0; }
+
+.top-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.top-nav a {
+  font-family: var(--f-widescreen);
+  font-size: 12.5px;
+  font-weight: 300;
+  letter-spacing: 0;
+  color: var(--ink-3);
+  transition: color 240ms var(--ease);
+}
+.top-nav a:hover,
+.top-nav a.is-active {
+  color: var(--ink);
+}
+
+/* =========================================================
+   PAGE SHELL
+   ========================================================= */
+main.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  /* Top padding must clear the fixed top-bar at all viewport sizes.
+     Top-bar height ≈ logo height (48px) + 2× padding (max 44px) ≈ 140px.
+     Add ~30px of breathing room above the first content. */
+  padding: clamp(160px, 22vh, 220px) var(--gutter) clamp(64px, 8vh, 96px);
+}
+.section__head {
+  margin-bottom: clamp(40px, 6vw, 72px);
+}
+.section__label {
+  font-family: var(--f-widescreen);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+/* Smaller label for subsections within a page (e.g. side-rail headings) */
+.sub__label {
+  font-family: var(--f-widescreen);
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.eyebrow {
+  font-family: var(--f-widescreen);
+  font-size: 11.5px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* =========================================================
+   INTRO (index.html)
+   ========================================================= */
+.intro {
+  flex: 1;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(180px, 28vh, 360px) var(--gutter) clamp(96px, 14vh, 160px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+.intro__inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 3vw, 40px);
+}
+.intro__wordmark {
+  font-family: var(--f-widescreen);
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--green);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.intro__wordmark .heavy { font-weight: 900; letter-spacing: -0.025em; }
+.intro__lede {
+  font-family: var(--f-widescreen);
+  font-size: clamp(14px, 1.1vw, 17px);
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 44ch;
+}
+.intro__th {
+  font-family: var(--f-thai);
+  font-size: clamp(13.5px, 1.05vw, 15.5px);
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--ink-2);
+  max-width: 44ch;
+}
+
+/* =========================================================
+   WORK (work.html) — case-study blocks
+   ========================================================= */
+.case {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 2fr 2fr;
+  gap: clamp(20px, 3vw, 48px);
+  align-items: start;
+  padding: clamp(64px, 10vw, 160px) 0;
+  border-top: 1px solid var(--hairline);
+}
+/* Foundation cases — single image, sized identically to a Selected-work tile.
+   Sits in column 2; column 3 stays empty as breathing space. */
+.case--single {
+  grid-template-columns: minmax(220px, 1fr) 2fr 2fr;
+}
+.case--single .case__media {
+  grid-column: 2 / 3;
+}
+/* Section group label — underlined heading between groups of cases */
+.cases__group-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin: clamp(80px, 12vw, 160px) 0 clamp(28px, 3vw, 44px);
+  border-top: 1px solid var(--ink);
+  padding-top: clamp(28px, 3vw, 44px);
+}
+/* First group label sits at the top of the section — no top hairline,
+   no extra padding, no extra margin. */
+.cases__group-label:first-child,
+.section__head + .cases__group-label,
+main.page > section.section > .cases__group-label:first-child {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+}
+.cases__group-label .label {
+  font-family: var(--f-widescreen);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ink);
+}
+.cases__group-label .note {
+  font-family: var(--f-thai);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--ink-2);
+  max-width: 40ch;
+  text-align: right;
+}
+/* When a case directly follows a group-label, drop its top border
+   (the group-label already provides it) */
+.cases__group-label + .case { border-top: 0; padding-top: clamp(28px, 4vw, 56px); }
+.case:first-of-type { border-top: 0; }
+
+
+.case__text {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: sticky;
+  top: 76px;
+}
+.case__title {
+  font-family: var(--f-widescreen);
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.case__body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: var(--f-thai);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--ink-2);
+  max-width: 36ch;
+}
+.case__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.case__meta .row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.case__meta .k {
+  font-family: var(--f-widescreen);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.case__meta .v {
+  font-family: var(--f-widescreen);
+  font-size: 13.5px;
+  font-weight: 300;
+  color: var(--ink);
+}
+.case__meta .v.th { font-family: var(--f-thai); color: var(--ink); }
+
+.case__media {
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  background: rgba(26, 26, 26, 0.035);
+  border: 1px solid var(--hairline);
+}
+.case__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 900ms var(--ease);
+}
+.case:hover .case__media img { transform: scale(1.02); }
+
+/* =========================================================
+   SERVICES (services.html)
+   ========================================================= */
+.services-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 3fr;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+.services-grid__head {
+  position: sticky;
+  top: 76px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.services-grid__head .lede {
+  font-family: var(--f-thai);
+  font-size: 13.5px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 28ch;
+}
+.services-list { display: flex; flex-direction: column; }
+.services-list li {
+  border-top: 1px solid var(--hairline);
+}
+.services-list li:last-child { border-bottom: 1px solid var(--hairline); }
+.services-list a {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 24px;
+  align-items: baseline;
+  padding: clamp(20px, 2vw, 28px) 0;
+  font-family: var(--f-widescreen);
+  font-weight: 300;
+  font-size: clamp(20px, 2vw, 28px);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  transition: color 240ms var(--ease);
+}
+.services-list a:hover { color: var(--green); }
+.services-list .num {
+  font-family: var(--f-widescreen);
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+.services-list .arrow {
+  font-size: 16px;
+  color: var(--ink-3);
+  transition: transform 320ms var(--ease), color 240ms var(--ease);
+}
+.services-list a:hover .arrow { transform: translateX(6px); color: var(--green); }
+
+/* =========================================================
+   ABOUT (about.html)
+   ========================================================= */
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 3fr;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+.about-grid__label {
+  position: sticky;
+  top: 76px;
+}
+.about-col {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 64ch;
+}
+.about-lede {
+  font-family: var(--f-widescreen);
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 300;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+.about-lede .em {
+  color: var(--green);
+  font-style: italic;
+}
+.about-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: var(--f-thai);
+  font-weight: 300;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+.about-body .em {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* =========================================================
+   CONTACT (contact.html)
+   ========================================================= */
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 3fr;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+.contact-grid__label {
+  position: sticky;
+  top: 76px;
+}
+.contact-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 5vw, 80px);
+  max-width: 800px;
+}
+.contact-addr {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.contact-addr .block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.contact-addr .k {
+  font-family: var(--f-widescreen);
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--ink);
+}
+.contact-addr p,
+.contact-addr a {
+  font-family: var(--f-body);
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.contact-addr p.th { font-family: var(--f-thai); }
+.contact-addr a {
+  border-bottom: 1px solid transparent;
+  transition: color 240ms var(--ease), border-color 240ms var(--ease);
+}
+.contact-addr a:hover { color: var(--green); border-bottom-color: var(--green); }
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label {
+  font-family: var(--f-widescreen);
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--ink);
+}
+.field input,
+.field textarea {
+  font-family: var(--f-body);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  padding: 6px 0 10px;
+  width: 100%;
+  outline: none;
+  resize: none;
+  line-height: 1.5;
+  transition: border-color 240ms var(--ease);
+}
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--ink-3);
+  font-family: var(--f-thai);
+}
+.field input:focus,
+.field textarea:focus { border-bottom-color: var(--ink); }
+.field textarea { min-height: 64px; }
+
+.form-submit {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  padding: 4px 0;
+  font-family: var(--f-widescreen);
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  transition: color 240ms var(--ease), border-color 240ms var(--ease), gap 240ms var(--ease);
+}
+.form-submit:hover { color: var(--green); border-bottom-color: var(--green); gap: 16px; }
+.form-success {
+  margin-top: 6px;
+  display: none;
+  font-family: var(--f-thai);
+  font-size: 13.5px;
+  font-weight: 300;
+  color: var(--green);
+}
+.form-success.is-shown { display: block; }
+
+/* =========================================================
+   FOOTER — green panel, blue mark left, info columns right
+   ========================================================= */
+.foot {
+  background: var(--green);
+  color: var(--paper);
+  width: 100%;
+  padding: clamp(24px, 3vw, 36px) var(--gutter);
+}
+.foot__inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: clamp(20px, 4vw, 56px);
+}
+.foot__brand { display: inline-flex; align-items: center; }
+.foot__mark {
+  display: block;
+  height: 28px;
+  width: auto;
+}
+.foot__col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--f-widescreen);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--paper);
+}
+.foot__col a {
+  color: var(--paper);
+  transition: opacity 240ms var(--ease);
+}
+.foot__col a:hover { opacity: 0.75; }
+.foot__col .th {
+  font-family: var(--f-thai);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 10.5px;
+}
+.foot__copy {
+  font-family: var(--f-widescreen);
+  font-size: 9.5px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper);
+  opacity: 0.7;
+  text-align: center;
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .foot__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .foot__col { font-size: 9px; align-items: flex-start !important; }
+  .foot__copy {
+    font-size: 9px;
+    white-space: normal;
+    text-align: left;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 720px) {
+  /* Smaller top-bar on mobile → smaller section padding-top so content
+     doesn't float far below the bar. */
+  .section { padding-top: 96px; }
+  /* Hamburger replaces the inline nav on mobile */
+  .top-bar {
+    padding: 14px var(--gutter);
+    align-items: center;
+  }
+  .nav__toggle { display: inline-flex; }
+  .top-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--paper);
+    padding: 96px var(--gutter) 48px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    transform: translateY(-100%);
+    transition: transform 360ms var(--ease);
+    z-index: 40;
+    pointer-events: none;
+  }
+  .top-bar[data-nav-open="true"] .top-nav {
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .top-nav a {
+    font-family: var(--f-widescreen);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition: color 200ms var(--ease);
+  }
+  .top-nav a.is-active,
+  .top-nav a:hover { color: var(--ink); }
+  .brand__mark { height: 38px; }
+  .brand--lockup .brand__mark { height: 64px; }
+  .intro { padding-top: clamp(96px, 18vh, 160px); }
+  /* Body scroll lock while the menu is open */
+  body.has-nav-open { overflow: hidden; }
+}
+@media (max-width: 900px) {
+  .case { grid-template-columns: 1fr 1fr; }
+  .case__text { grid-column: 1 / -1; position: static; }
+}
+@media (max-width: 640px) {
+  .case { grid-template-columns: 1fr; gap: 24px; }
+  .case__media { aspect-ratio: 4/3; }
+  /* Foundation cases — reset the desktop column placement so the
+     image takes the full mobile row, same as Selected works. */
+  .case--single .case__media { grid-column: 1 / -1; }
+  .services-grid,
+  .about-grid,
+  .contact-grid { grid-template-columns: 1fr; }
+  .services-grid__head,
+  .about-grid__label,
+  .contact-grid__label { position: static; }
+  .contact-cols { grid-template-columns: 1fr; }
+  /* Mobile: separate the address from the form with a hairline + breathing space */
+  .contact-cols .contact-form {
+    border-top: 1px solid var(--hairline);
+    padding-top: clamp(28px, 6vw, 40px);
+    margin-top: clamp(4px, 2vw, 12px);
+  }
+  .foot { flex-direction: column; align-items: flex-start; gap: 16px; }
+}

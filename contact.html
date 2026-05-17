@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — PASSIONMADE GROUP</title>
+<link rel="icon" type="image/png" href="assets/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:wght@300;500;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body class="has-hamburger">
+
+<header class="top-bar">
+  <a href="index.html" class="brand" aria-label="PASSIONMADE GROUP — home">
+    <img class="brand__mark" src="assets/logo-mark.png" alt="PASSIONMADE GROUP">
+  </a>
+  <button class="nav__toggle" type="button" aria-label="Toggle menu" aria-expanded="false"><span class="nav__toggle__icon"><span></span></span></button>
+  <nav class="top-nav" aria-label="Primary">
+    <a href="index.html"    data-page="index.html">Home</a>
+    <a href="work.html"     data-page="work.html">Works</a>
+    <a href="services.html" data-page="services.html">Services</a>
+    <a href="about.html"    data-page="about.html">About</a>
+    <a href="contact.html"  data-page="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="page">
+  <section class="section">
+    <div class="contact-grid">
+      <div class="contact-grid__label">
+        <span class="sub__label">Location</span>
+      </div>
+      <div class="contact-cols">
+        <div class="contact-addr">
+          <div class="block">
+            <span class="k">Address</span>
+            <p class="th">บริษัท แพชชั่นเมด กรุ๊ป จำกัด</p>
+            <p class="th">222/222 หมู่ที่ 6 ต.ในเมือง<br>อ.เมืองขอนแก่น จ.ขอนแก่น 40000</p>
+          </div>
+          <div class="block">
+            <span class="k">Email</span>
+            <a href="mailto:info@passionmadegroup.com" style="font-size: 12px">info@passionmadegroup.com</a>
+          </div>
+          <div class="block">
+            <span class="k">Phone</span>
+            <a href="tel:+66659544161" style="font-size: 12px">(+66) 65-954-4161</a>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contact-form" novalidate>
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input type="text" id="f-name" name="name" placeholder="ชื่อของคุณ" required>
+          </div>
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input type="email" id="f-email" name="email" placeholder="you@company.com" required>
+          </div>
+          <div class="field">
+            <label for="f-msg">Message</label>
+            <textarea id="f-msg" name="message" placeholder="เล่ารายละเอียดโครงการของคุณ…" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="form-submit">Send →</button>
+          <div class="form-success" id="form-success"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot__inner">
+    <a href="index.html" class="foot__brand" aria-label="PASSIONMADE GROUP — home">
+      <img class="foot__mark" src="assets/logo-mark-blue-clean.png" alt="PASSIONMADE GROUP">
+    </a>
+    <span class="foot__copy">© 2026 PASSIONMADE GROUP. All rights reserved.</span>
+    <div class="foot__col" style="align-items: flex-end; text-align: right;">
+      <a href="mailto:info@passionmadegroup.com">info@passionmadegroup.com</a>
+      <a href="tel:+66659544161">(+66) 65-954-4161</a>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script>
+(function () {
+  var form = document.getElementById("contact-form");
+  var ok = document.getElementById("form-success");
+  if (!form) return;
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = form.querySelector("#f-name").value.trim();
+    var email = form.querySelector("#f-email").value.trim();
+    var msg = form.querySelector("#f-msg").value.trim();
+    if (!name || !email || !msg) {
+      ok.textContent = "กรุณากรอกข้อมูลให้ครบทุกช่อง";
+      ok.style.color = "#B23A2E";
+      ok.classList.add("is-shown");
+      return;
+    }
+    ok.textContent = "ขอบคุณคุณ " + name.split(" ")[0] + " — เราจะติดต่อกลับภายใน 2 วันทำการ";
+    ok.style.color = "var(--green)";
+    ok.classList.add("is-shown");
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>
