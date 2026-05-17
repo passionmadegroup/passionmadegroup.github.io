@@ -131,6 +131,40 @@ ul { list-style: none; }
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ---------------------------------------------------------
+   Inner pages (everything except Home) get a horizontal
+   top nav on desktop, with the hamburger toggle hidden.
+   Mobile still uses the hamburger via the @media rule below.
+   --------------------------------------------------------- */
+@media (min-width: 721px) {
+  body.has-hamburger .nav__toggle { display: none; }
+  body.has-hamburger .top-bar { align-items: center; }
+  body.has-hamburger .top-nav {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(20px, 3vw, 40px);
+    padding: 0;
+    background: transparent;
+    transform: none;
+    pointer-events: auto;
+  }
+  body.has-hamburger .top-nav a {
+    font-family: var(--f-widescreen);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition: color 200ms var(--ease);
+    padding: 4px 0;
+  }
+  body.has-hamburger .top-nav a.is-active,
+  body.has-hamburger .top-nav a:hover { color: var(--ink); }
+}
+/* Mobile (≤720): the @media rule far below turns the inline nav into
+   the slide-down overlay panel for every page, including Home. */
 .nav__toggle__icon {
   position: relative;
   display: block;
@@ -195,8 +229,10 @@ main.page {
   max-width: 1600px;
   margin: 0 auto;
   width: 100%;
-  /* Increased top padding to clear the now-opaque fixed top-bar */
-  padding: clamp(120px, 16vh, 180px) var(--gutter) clamp(64px, 8vh, 96px);
+  /* Top padding must clear the fixed top-bar at all viewport sizes.
+     Top-bar height ≈ logo height (48px) + 2× padding (max 44px) ≈ 140px.
+     Add ~30px of breathing room above the first content. */
+  padding: clamp(160px, 22vh, 220px) var(--gutter) clamp(64px, 8vh, 96px);
 }
 .section__head {
   margin-bottom: clamp(40px, 6vw, 72px);
@@ -301,14 +337,17 @@ main.page {
   justify-content: space-between;
   gap: 24px;
   margin: clamp(80px, 12vw, 160px) 0 clamp(28px, 3vw, 44px);
-}
-/* First group sits right under the page header — reset top margin,
-   add the same hairline rule the other pages have above their grids */
-.cases__group-label:first-child,
-.section__head + .cases__group-label {
-  margin-top: 0;
   border-top: 1px solid var(--ink);
-  padding-top: clamp(48px, 6vw, 80px);
+  padding-top: clamp(28px, 3vw, 44px);
+}
+/* First group label sits at the top of the section — no top hairline,
+   no extra padding, no extra margin. */
+.cases__group-label:first-child,
+.section__head + .cases__group-label,
+main.page > section.section > .cases__group-label:first-child {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
 }
 .cases__group-label .label {
   font-family: var(--f-widescreen);
@@ -409,8 +448,6 @@ main.page {
   grid-template-columns: minmax(220px, 1fr) 3fr;
   gap: clamp(24px, 4vw, 64px);
   align-items: start;
-  border-top: 1px solid var(--ink);
-  padding-top: clamp(48px, 6vw, 80px);
 }
 .services-grid__head {
   position: sticky;
@@ -468,8 +505,6 @@ main.page {
   grid-template-columns: minmax(220px, 1fr) 3fr;
   gap: clamp(24px, 4vw, 64px);
   align-items: start;
-  border-top: 1px solid var(--ink);
-  padding-top: clamp(48px, 6vw, 80px);
 }
 .about-grid__label {
   position: sticky;
@@ -516,8 +551,6 @@ main.page {
   grid-template-columns: minmax(220px, 1fr) 3fr;
   gap: clamp(24px, 4vw, 64px);
   align-items: start;
-  border-top: 1px solid var(--ink);
-  padding-top: clamp(48px, 6vw, 80px);
 }
 .contact-grid__label {
   position: sticky;
@@ -700,6 +733,9 @@ main.page {
    Responsive
    ========================================================= */
 @media (max-width: 720px) {
+  /* Smaller top-bar on mobile → smaller section padding-top so content
+     doesn't float far below the bar. */
+  .section { padding-top: 96px; }
   /* Hamburger replaces the inline nav on mobile */
   .top-bar {
     padding: 14px var(--gutter);
