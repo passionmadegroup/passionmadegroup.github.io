@@ -257,8 +257,14 @@ main.page {
   gap: 24px;
   margin: clamp(80px, 12vw, 160px) 0 clamp(28px, 3vw, 44px);
 }
+/* First group sits right under the page header — reset top margin,
+   add the same hairline rule the other pages have above their grids */
 .cases__group-label:first-child,
-.section__head + .cases__group-label { margin-top: 0; }
+.section__head + .cases__group-label {
+  margin-top: 0;
+  border-top: 1px solid var(--ink);
+  padding-top: clamp(48px, 6vw, 80px);
+}
 .cases__group-label .label {
   font-family: var(--f-widescreen);
   font-size: 14px;
@@ -631,6 +637,25 @@ main.page {
 /* =========================================================
    Responsive
    ========================================================= */
+@media (max-width: 720px) {
+  /* Tighter top bar + horizontal nav on mobile so it doesn't eat
+     180+px of vertical space hiding section headers underneath. */
+  .top-bar {
+    padding: 16px var(--gutter);
+    align-items: center;
+  }
+  .top-nav {
+    flex-direction: row;
+    gap: clamp(14px, 3vw, 22px);
+    align-items: center;
+  }
+  .top-nav a { font-size: 11px; letter-spacing: 0.06em; padding: 4px 0; }
+  .brand__mark { height: 24px; }
+  .brand--lockup .brand__mark { height: 36px; }
+  /* Reduce the top hero padding on Home so the lockup doesn't get
+     pushed way down a short mobile viewport. */
+  .intro { padding-top: clamp(96px, 18vh, 160px); }
+}
 @media (max-width: 900px) {
   .case { grid-template-columns: 1fr 1fr; }
   .case__text { grid-column: 1 / -1; position: static; }
@@ -638,6 +663,9 @@ main.page {
 @media (max-width: 640px) {
   .case { grid-template-columns: 1fr; gap: 24px; }
   .case__media { aspect-ratio: 4/3; }
+  /* Foundation cases — reset the desktop column placement so the
+     image takes the full mobile row, same as Selected works. */
+  .case--single .case__media { grid-column: 1 / -1; }
   .services-grid,
   .about-grid,
   .contact-grid { grid-template-columns: 1fr; }
