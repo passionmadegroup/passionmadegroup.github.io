@@ -249,10 +249,15 @@ main.page {
 .sub__label {
   font-family: var(--f-widescreen);
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink);
+  display: inline-block;
+  align-self: flex-start;
+  line-height: 1;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ink);
 }
 
 .eyebrow {
@@ -703,6 +708,36 @@ main.page > section.section > .cases__group-label:first-child {
   letter-spacing: 0;
   font-size: 10.5px;
 }
+/* Social icons row in the footer */
+.foot__social {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+.foot__social a {
+  display: inline-flex;
+  align-items: center;
+  color: var(--paper);
+  transition: opacity 200ms var(--ease);
+}
+.foot__social a:hover { opacity: 0.7; }
+.foot__social svg { display: block; }
+/* Social icons row on the Contact page */
+.social-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+.social-row a {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink);
+  transition: color 200ms var(--ease);
+}
+.social-row a:hover { color: var(--green); }
+.social-row svg { display: block; }
 .foot__copy {
   font-family: var(--f-widescreen);
   font-size: 9.5px;
@@ -775,6 +810,29 @@ main.page > section.section > .cases__group-label:first-child {
   .intro { padding-top: clamp(96px, 18vh, 160px); }
   /* Body scroll lock while the menu is open */
   body.has-nav-open { overflow: hidden; }
+  /* Footer on mobile: grid so the copyright sits NEXT TO the logo on row 1,
+     and the email/phone block falls to row 2 underneath both. */
+  .foot__inner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 12px 14px;
+  }
+  .foot__brand   { grid-row: 1; grid-column: 1; }
+  .foot__copy    {
+    grid-row: 1; grid-column: 2;
+    text-align: left;
+    white-space: normal;
+    font-size: 7.5px;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+    opacity: 0.6;
+  }
+  .foot__col     {
+    grid-row: 2; grid-column: 1 / -1;
+    font-size: 9px;
+    align-items: flex-start !important;
+  }
 }
 @media (max-width: 900px) {
   .case { grid-template-columns: 1fr 1fr; }
