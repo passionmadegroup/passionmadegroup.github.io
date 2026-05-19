@@ -25,7 +25,10 @@
 <meta name="twitter:title" content="Contact — PASSIONMADE GROUP">
 <meta name="twitter:description" content="ติดต่อ PASSIONMADE GROUP / บริษัท แพชชั่นเมด กรุ๊ป จำกัด — info@passionmadegroup.com · (+66) 65-954-4161 · 222/222 หมู่ที่ 6 ต.ในเมือง อ.เมืองขอนแก่น จ.ขอนแก่น 40000">
 <meta name="twitter:image" content="https://www.passionmadegroup.com/assets/logo-lockup-green.png">
-<link rel="icon" type="image/png" href="assets/logo-mark.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:wght@300;500;900&display=swap" rel="stylesheet">
@@ -58,7 +61,8 @@
           <div class="block">
             <span class="k">Address</span>
             <p class="th">บริษัท แพชชั่นเมด กรุ๊ป จำกัด</p>
-            <p class="th">222/222 หมู่ที่ 6 ต.ในเมือง<br>อ.เมืองขอนแก่น จ.ขอนแก่น 40000</p>
+            <p class="th" style="margin-top:8px;">สำนักงานนนทบุรี<br>29 ซอยประชาชื่นนนทบุรี 2 ต.บางเขน<br>อ.เมืองนนทบุรี จ.นนทบุรี 11000</p>
+            <p class="th" style="margin-top:8px;">สำนักงานขอนแก่น<br>222/222 หมู่ที่ 6 ต.ในเมือง<br>อ.เมืองขอนแก่น จ.ขอนแก่น 40000</p>
           </div>
           <div class="block">
             <span class="k">Email</span>
@@ -77,7 +81,7 @@
           </div>
         </div>
 
-        <form class="contact-form" id="contact-form" novalidate>
+        <form class="contact-form" id="contact-form" action="https://formspree.io/f/xdajozry" method="POST" novalidate>
           <div class="field">
             <label for="f-name">Name</label>
             <input type="text" id="f-name" name="name" placeholder="ชื่อของคุณ" required>
@@ -120,7 +124,9 @@
 (function () {
   var form = document.getElementById("contact-form");
   var ok = document.getElementById("form-success");
-  if (!form) return;
+  var btn = form && form.querySelector(".form-submit");
+  if (!form || !btn) return;
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     var name = form.querySelector("#f-name").value.trim();
@@ -132,10 +138,40 @@
       ok.classList.add("is-shown");
       return;
     }
-    ok.textContent = "ขอบคุณคุณ " + name.split(" ")[0] + " — เราจะติดต่อกลับภายใน 2 วันทำการ";
-    ok.style.color = "var(--green)";
-    ok.classList.add("is-shown");
-    form.reset();
+
+    var originalLabel = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+    ok.classList.remove("is-shown");
+
+    var data = new FormData(form);
+    fetch(form.action, {
+      method: "POST",
+      body: data,
+      headers: { "Accept": "application/json" }
+    }).then(function (res) {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      if (res.ok) {
+        ok.textContent = "ขอบคุณคุณ " + name.split(" ")[0] + " — เราจะติดต่อกลับภายใน 2 วันทำการ";
+        ok.style.color = "var(--green)";
+        ok.classList.add("is-shown");
+        form.reset();
+      } else {
+        return res.json().then(function (data) {
+          var err = (data && data.errors && data.errors.map(function (e) { return e.message; }).join(", ")) || "ส่งไม่สำเร็จ กรุณาลองใหม่อีกครั้ง";
+          ok.textContent = err;
+          ok.style.color = "#B23A2E";
+          ok.classList.add("is-shown");
+        });
+      }
+    }).catch(function () {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      ok.textContent = "ไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่อีกครั้ง";
+      ok.style.color = "#B23A2E";
+      ok.classList.add("is-shown");
+    });
   });
 })();
 </script>
